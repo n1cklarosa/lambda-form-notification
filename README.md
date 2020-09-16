@@ -6,7 +6,8 @@ Details coming soon.
 
 - Add better error handling
 - Add validation
+- Add dynamoDb record with each form submitted
 
 #### History
 
-- 2020/09/16 - Iinitial Commit
+- 2020/09/16 - Initial Commit
