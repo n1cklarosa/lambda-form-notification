@@ -1,5 +1,5 @@
 var aws = require("aws-sdk");
-var ses = new aws.SES({ region: "ap-southeast-2" }); 
+var ses = new aws.SES({ region: "ap-southeast-2" });
 
 let email_to = process.env.EMAIL_ADDRESS;
 let email_from = process.env.EMAIL_ADDRESS_FROM;
@@ -31,7 +31,7 @@ const sendEmail = async (formDetails, context) => {
     .sendEmail(params, function (err, data) {
       if (err) {
         console.log("We failed?", err);
-        context.fail(err);
+        context.fail({ status: false, msg: err });
       } else {
         return true;
       }
@@ -42,24 +42,22 @@ const sendEmail = async (formDetails, context) => {
 };
 
 exports.handler = async (event, context, callback) => {
-  console.log("GOt here", event);
+  console.log("Event Received", event);
 
   var formDetails = event.body;
 
-  console.log("Then got here", formDetails);
-
-  if(!formDetails.formName){
-    context.fail("Sorry, no good");
+  if (!formDetails.formName) {
+    context.fail({ status: false, msg: "Sorry, no good" });
   }
 
   var end = await sendEmail(formDetails, context);
-  console.log("Got here", end);
+
   if (end === true) {
     context.succeed({
       status: true,
       msg: "Thanks for getting in touch, I will get back you asap",
     });
   } else {
-    context.succeed("This went bad didnt it?!");
+    context.fail({ status: false, msg: "Something went bad here" });
   }
 };
